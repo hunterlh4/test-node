@@ -140,5 +140,41 @@
       <div class="method POST">POST</div>
       <div class="url"><code>/api/usuarios/create</code></div>
     </div>
+
+    <h2>📚 Artículos / Publicaciones</h2>
+
+    <div class="route-box">
+      <div class="title">
+        Filtrar publicaciones (por tipo, título, titulo de publicacion, orden
+        (fecha,autor,titulo), limitador,pagina) ->
+        <span class="controller">filterPublicaciones</span>
+      </div>
+      <div class="method GET">GET</div>
+      <div class="url">
+        <a
+          href="/api/articulos/filterPublicaciones?type=frontend&title=react&query=hooks&sortBy=fecha&order=desc&limit=2&page=1"
+          target="_blank"
+        >
+          /api/articulos/filterPublicaciones?type=frontend&title=react&query=hooks&sortBy=fecha&order=desc&limit=2&page=1
+        </a>
+      </div>
+    </div>
+
+    <div class="route-box">
+      <div class="title">
+        Obtener contenido de publicación por slug (y sus slugs
+        anterior/siguiente) ->
+        <span class="controller">getPublicacionBySlug</span>
+      </div>
+      <div class="method GET">GET</div>
+      <div class="url">
+        <a
+          href="/api/articulos/getPublicacionBySlug/guia-completa-de-react-con-hooks"
+          target="_blank"
+        >
+          /api/articulos/getPublicacionBySlug/:slug
+        </a>
+      </div>
+    </div>
   </body>
 </html>

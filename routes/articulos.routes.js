@@ -14,130 +14,97 @@ const getNuevoId = (data) => {
   return (Math.max(0, ...ids) + 1).toString();
 };
 
-// Ruta GET para listar artículos
-router.get("/getAll", (req, res) => {
+router.get("/filterPublicaciones", (req, res) => {
+  const {
+    type,
+    title,
+    query,
+    // author,
+    sortBy,
+    order = "asc",
+    limit = 2,
+    page = 1
+  } = req.query;
+
   try {
     const data = fs.existsSync(bdPath)
       ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
       : [];
 
-    const categorias = data.map(({ id, title, type, icon, publicacion }) => ({
-      id,
-      title,
-      type,
-      icon,
-      total: Array.isArray(publicacion) ? publicacion.length : 0
-    }));
+    let publicaciones = [];
 
-    res.json({
-      success: true,
-      data: categorias,
-      mensaje: "Artículos obtenidos correctamente"
+    // Aplanar todas las publicaciones (sin incluir el campo "contenido")
+    data.forEach((categoria) => {
+      if (Array.isArray(categoria.publicacion)) {
+        categoria.publicacion.forEach((pub) => {
+          const { contenido, links, ...resto } = pub; // eliminar contenido
+          publicaciones.push({
+            ...resto,
+            categoryTitle: categoria.title,
+            categoryType: categoria.type
+            // categorySlug: categoria.slug
+          });
+        });
+      }
     });
-  } catch (error) {
-    console.error("Error al listar:", error);
-    res.status(500).json({
-      success: false,
-      data: [],
-      mensaje: "Error al leer los artículos"
-    });
-  }
-});
 
-// Ruta GET para guardar un artículo aleatorio
-router.post("/save", (req, res) => {
-  const { title, type, icon } = req.body;
+    // Filtros
+    if (type) {
+      publicaciones = publicaciones.filter(
+        (p) => p.categoryType.toLowerCase() === type.toLowerCase()
+      );
+    }
 
-  if (!title || !type || !icon) {
-    return res.status(400).json({
-      success: false,
-      data: null,
-      mensaje: "Faltan campos obligatorios: title, type o icon"
-    });
-  }
+    if (title) {
+      publicaciones = publicaciones.filter((p) =>
+        p.categoryTitle.toLowerCase().includes(title.toLowerCase())
+      );
+    }
+    if (query) {
+      publicaciones = publicaciones.filter((p) =>
+        p.titulo.toLowerCase().includes(query.toLowerCase())
+      );
+    }
 
-  try {
-    const contenidoActual = fs.existsSync(bdPath)
-      ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
-      : [];
-
-    const nuevoArticulo = {
-      id: getNuevoId(contenidoActual),
-      title,
-      type,
-      slug: generarSlug(title),
-      icon,
-      publicacion: []
-    };
-
-    contenidoActual.push(nuevoArticulo);
-
-    fs.writeFileSync(bdPath, JSON.stringify(contenidoActual, null, 2), "utf8");
-
-    res.status(201).json({
-      success: true,
-      data: nuevoArticulo,
-      mensaje: "Artículo guardado correctamente"
-    });
-  } catch (error) {
-    console.error("Error al guardar:", error);
-    res.status(500).json({
-      success: false,
-      data: null,
-      mensaje: "Error al guardar el artículo"
-    });
-  }
-});
-
-router.post("/edit", (req, res) => {
-  const { id, title, type, icon } = req.body;
-
-  if (!id || !title || !type || !icon) {
-    return res.status(400).json({
-      success: false,
-      data: null,
-      mensaje: "Faltan campos obligatorios: id, title, type o icon"
-    });
-  }
-
-  try {
-    const contenidoActual = fs.existsSync(bdPath)
-      ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
-      : [];
-
-    const index = contenidoActual.findIndex((a) => a.id === id);
-
-    if (index === -1) {
-      return res.status(404).json({
-        success: false,
-        data: null,
-        mensaje: "Artículo no encontrado"
+    if (sortBy) {
+      publicaciones.sort((a, b) => {
+        const valA = (a[sortBy] || "").toString().toLowerCase();
+        const valB = (b[sortBy] || "").toString().toLowerCase();
+        return order === "desc"
+          ? valB.localeCompare(valA)
+          : valA.localeCompare(valB);
       });
     }
 
-    contenidoActual[index].title = title;
-    contenidoActual[index].type = type;
-    contenidoActual[index].slug = generarSlug(title);
-    contenidoActual[index].icon = icon;
-
-    fs.writeFileSync(bdPath, JSON.stringify(contenidoActual, null, 2), "utf8");
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+    const total = publicaciones.length;
+    const startIndex = (pageInt - 1) * limitInt;
+    const endIndex = startIndex + limitInt;
+    const paginated = publicaciones.slice(startIndex, endIndex);
 
     res.json({
       success: true,
-      data: contenidoActual[index],
-      mensaje: "Artículo editado correctamente"
+      mensaje: "Publicaciones filtradas correctamente",
+      data: {
+        total,
+        page: pageInt,
+        limit: limitInt,
+        totalPages: Math.ceil(total / limitInt),
+        data: paginated
+      }
     });
   } catch (error) {
-    console.error("Error al editar:", error);
+    console.error("Error al filtrar publicaciones:", error);
     res.status(500).json({
       success: false,
-      data: null,
-      mensaje: "Error al editar el artículo"
+      data: [],
+      mensaje: "Error al procesar las publicaciones"
     });
   }
 });
 
-router.get("/getBySlug/:slug", (req, res) => {
+router.get("/getPublicacionBySlug/:slug", (req, res) => {
   const { slug } = req.params;
 
   try {
@@ -145,43 +112,54 @@ router.get("/getBySlug/:slug", (req, res) => {
       ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
       : [];
 
-    const articulo = data.find((a) => a.slug === slug);
+    // Aplanar todas las publicaciones y conservar info de categoría
+    const publicaciones = [];
+    data.forEach((categoria) => {
+      if (Array.isArray(categoria.publicacion)) {
+        categoria.publicacion.forEach((pub) => {
+          publicaciones.push({
+            ...pub,
+            categoryTitle: categoria.title,
+            categoryType: categoria.type,
+            categorySlug: categoria.slug
+          });
+        });
+      }
+    });
 
-    if (!articulo) {
+    // Ordenar por fecha ascendente (o lo que tú prefieras)
+    publicaciones.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+    // Buscar la publicación actual por slug exacto
+    const index = publicaciones.findIndex((p) => p.slug === `/${slug}`);
+
+    if (index === -1) {
       return res.status(404).json({
         success: false,
         data: null,
-        mensaje: `No se encontró un artículo con el slug "${slug}"`
+        mensaje: `No se encontró la publicación con slug: /${slug}`
       });
     }
 
-    // Clonar artículo excluyendo contenido de cada publicación
-    const articuloSinContenido = {
-      ...articulo,
-      publicacion: (articulo.publicacion || []).map((pub) => ({
-        id: pub.id,
-        titulo: pub.titulo,
-        descripcion: pub.descripcion,
-        slug: pub.slug,
-        tags: pub.tags,
-        fecha: pub.fecha,
-        author: pub.author,
-        authorSlug: pub.authorSlug,
-        authorImage: pub.authorImage
-      }))
-    };
+    const current = publicaciones[index];
+    const prev = publicaciones[index - 1];
+    const next = publicaciones[index + 1];
 
     res.json({
       success: true,
-      data: articuloSinContenido,
-      mensaje: `Artículo con slug "${slug}" encontrado correctamente`
+      mensaje: "Publicación encontrada correctamente",
+      data: {
+        publicacion: current,
+        prevSlug: prev?.slug || null,
+        nextSlug: next?.slug || null
+      }
     });
   } catch (error) {
-    console.error("Error al buscar por slug:", error);
+    console.error("Error al obtener publicación:", error);
     res.status(500).json({
       success: false,
       data: null,
-      mensaje: "Error al buscar el artículo"
+      mensaje: "Error interno al obtener publicación"
     });
   }
 });

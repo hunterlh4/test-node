@@ -1,10 +1,226 @@
 [
   {
-    "id": "1751318660825",
-    "title": "Vue",
-    "type": "backend",
-    "slug": "f8vuxg",
-    "icon": "https://api.iconify.design/logos:f8vuxg.svg",
-    "contenido": []
-  }
+   "id": 1,
+   "title": "react",
+   "type": "frontend",
+   "slug": "react",
+   "publicacion": [
+     {
+       "id": 1,
+       "titulo": "Guía completa de React con Hooks",
+       "descripcion":
+         "Introducción a React con ejemplos prácticos usando Hooks.",
+       "slug": "/guia-completa-de-react-con-hooks",
+       "contenido": [
+         {
+           "tipo": "titulo",
+           "texto": "¿Qué es React?"
+         },
+         {
+           "tipo": "parrafo",
+           "texto":
+             "React es una biblioteca de JavaScript para construir interfaces..."
+         },
+         {
+           "tipo": "codigo",
+           "lenguaje": "js",
+           "texto": "const [count, setCount] = useState(0)"
+         },
+         {
+           "tipo": "imagen",
+           "url": "https://example.com/react-diagrama.png",
+           "alt": "Diagrama de componentes"
+         }
+       ],
+       "tags": ["react", "hooks", "javascript"],
+       "fecha": "2023-10-01 12:00:00",
+       "author": "Juan Pérez",
+       "authorSlug": "juan-perez",
+       "authorImage": "https://example.com/juan-perez.jpg",
+       "links": [
+         {
+           "name": "Documentación oficial",
+           "url": "https://reactjs.org/docs/hooks-intro.html"
+         },
+         {
+           "name": "Repositorio GitHub",
+           "url": "https://github.com/facebook/react"
+         }
+       ]
+     },
+     {
+       "id": 2,
+       "titulo": "Estado global con Context API",
+       "descripcion":
+         "Uso de React Context para manejar el estado global de la aplicación.",
+       "slug": "/uso-de-context-api-en-react",
+       "contenido": "Explicación de cómo funciona Context...",
+       "author": "Juan Pérez",
+       "authorSlug": "juan-perez",
+       "authorImage": "https://example.com/juan-perez.jpg",
+       "tags": ["react", "estado", "context"],
+       "fecha": "2023-11-10 08:45:00",
+       "links": [
+         {
+           "name": "Ejemplo práctico",
+           "url": "https://example.com/context-ejemplo"
+         }
+       ]
+     }
+   ]
+ },
+ {
+   "id": 2,
+   "title": "angular",
+   "type": "frontend",
+   "slug": "angular",
+   "publicacion": [
+     {
+       "id": 3,
+       "titulo": "Introducción a Angular y componentes",
+       "descripcion": "Crea componentes reutilizables en Angular paso a paso.",
+       "slug": "/guias/angular/componentes-basicos",
+       "contenido":
+         "Angular es un framework para crear SPA utilizando TypeScript...",
+       "author": "Juan Pérez",
+       "authorSlug": "juan-perez",
+       "authorImage": "https://example.com/juan-perez.jpg",
+       "tags": ["angular", "componentes", "typescript"],
+       "fecha": "2024-01-05 10:30:00",
+       "links": [
+         {
+           "name": "Guía oficial de Angular",
+           "url": "https://angular.io/start"
+         }
+       ]
+     }
+   ]
+ },
+ {
+   "id": 3,
+   "title": "vue",
+   "type": "frontend",
+   "slug": "vue",
+   "publicacion": [
+     {
+       "id": 4,
+       "titulo": "Primeros pasos con Vue 3",
+       "descripcion": "Cómo empezar a usar Vue.js 3 con Composition API.",
+       "slug": "/guias/vue/vue3-intro",
+       "contenido":
+         "Vue 3 utiliza una nueva Composition API que mejora la organización del código...",
+       "author": "Juan Pérez",
+       "authorSlug": "juan-perez",
+       "authorImage": "https://example.com/juan-perez.jpg",
+       "tags": ["vue", "javascript", "composition-api"],
+       "fecha": "2024-03-10 15:00:00",
+       "links": [
+         {
+           "name": "Documentación oficial",
+           "url": "https://vuejs.org/guide/introduction.html"
+         }
+       ]
+     }
+    
+   ]
+ },
+ {
+   "id": 4,
+   "title": "prisma",
+   "type": "orm",
+   "slug": "prisma",
+   "publicacion": []
+ },
+ {
+   "id": 5,
+   "title": "node",
+   "type": "frontend",
+   "slug": "node",
+   "publicacion": []
+ },
+ {
+   "id": 6,
+   "title": "typescript",
+   "type": "frontend",
+   "slug": "typescript",
+   "publicacion": []
+ },
+ {
+   "id": 7,
+   "title": "csharp",
+   "type": "backend",
+   "slug": "csharp",
+   "publicacion": []
+ },
+ {
+   "id": 8,
+   "title": "go",
+   "type": "backend",
+   "slug": "go",
+   "publicacion": []
+ },
+
+ {
+   "id": 9,
+   "title": "sql",
+   "type": "base de datos",
+   "slug": "sql",
+   "publicacion": []
+ },
+ {
+   "id": 10,
+   "title": "ui/ux",
+   "type": "diseño",
+   "slug": "uiux",
+   "publicacion": []
+ },
+ {
+   "id": 11,
+   "title": "tailwind",
+   "type": "frontend",
+   "slug": "tailwind",
+   "publicacion": []
+ },
+ {
+   "id": 12,
+   "title": "herramientas",
+   "type": "utilidades",
+   "slug": "herramientas",
+   "publicacion": []
+ },
+ {
+   "id": 13,
+   "title": "nextjs",
+   "type": "fullstack",
+   "slug": "nextjs",
+   "publicacion": []
+ },
+ {
+   "id": 14,
+   "title": "nestjs",
+   "type": "backend",
+   "slug": "nestjs",
+   "publicacion": []
+ },
+ {
+   "id": 15,
+   "title": "flutter",
+   "type": "mobile",
+   "slug": "flutter",
+   "publicacion": []
+ },
+ {
+   "id": 16,
+   "title": "react native",
+   "type": "mobile",
+   "slug": "react-native",
+   "publicacion": []
+ },
+ {
+   "id": 17,
+   "title": "otros",
+   "type": "utilidades",
+   "slug": "otros",
+   "publicacion": []
+ }
 ]
