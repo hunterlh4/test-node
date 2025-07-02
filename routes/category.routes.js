@@ -1,67 +1,65 @@
-const express = require('express')
-const fs = require('fs')
-const path = require('path')
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
 
-const router = express.Router()
-const bdPath = path.join(__dirname, '../articulos.json')
-
+const router = express.Router();
+const bdPath = path.join(__dirname, "../articulos.json");
 
 const generarSlug = (texto) => {
-  return texto.toLowerCase().replace(/\s+/g, '-');
+  return texto.toLowerCase().replace(/\s+/g, "-");
 };
 
-const getNuevoId = (data) =>{
-  const ids = data.map(a => parseInt(a.id))
-  return (Math.max(0, ...ids) + 1).toString()
-}
-
+const getNuevoId = (data) => {
+  const ids = data.map((a) => parseInt(a.id));
+  return (Math.max(0, ...ids) + 1).toString();
+};
 
 // Ruta GET para listar artículos
-router.get('/getAll', (req, res) => {
+router.get("/getAll", (req, res) => {
   try {
     const data = fs.existsSync(bdPath)
-      ? JSON.parse(fs.readFileSync(bdPath, 'utf8'))
-      : []
+      ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
+      : [];
 
-     const categorias = data.map(({ id, title, type, icon, contenido }) => ({
-       id,
+    const categorias = data.map(({ id, title, type, icon, publicacion }) => ({
+      id,
       title,
       type,
       icon,
-      total: Array.isArray(contenido) ? contenido.length : 0
-    }))
+      total: Array.isArray(publicacion) ? publicacion.length : 0
+    }));
 
     res.json({
       success: true,
       data: categorias,
-      mensaje: 'Artículos obtenidos correctamente'
-    })
+      mensaje: "Artículos obtenidos correctamente"
+    });
   } catch (error) {
-    console.error('Error al listar:', error)
+    console.error("Error al listar:", error);
     res.status(500).json({
       success: false,
       data: [],
-      mensaje: 'Error al leer los artículos'
-    })
+      mensaje: "Error al leer los artículos"
+    });
   }
-})
+});
 
 // Ruta GET para guardar un artículo aleatorio
-router.post('/save', (req, res) => {
-  const { title, type, icon } = req.body
+router.post("/save", (req, res) => {
+  const { title, type, icon } = req.body;
 
   if (!title || !type || !icon) {
     return res.status(400).json({
       success: false,
       data: null,
-      mensaje: 'Faltan campos obligatorios: title, type o icon'
-    })
+      mensaje: "Faltan campos obligatorios: title, type o icon"
+    });
   }
 
   try {
     const contenidoActual = fs.existsSync(bdPath)
-      ? JSON.parse(fs.readFileSync(bdPath, 'utf8'))
-      : []
+      ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
+      : [];
 
     const nuevoArticulo = {
       id: getNuevoId(contenidoActual),
@@ -69,108 +67,122 @@ router.post('/save', (req, res) => {
       type,
       slug: generarSlug(title),
       icon,
-      contenido: []
-    }
+      publicacion: []
+    };
 
-    contenidoActual.push(nuevoArticulo)
+    contenidoActual.push(nuevoArticulo);
 
-    fs.writeFileSync(bdPath, JSON.stringify(contenidoActual, null, 2), 'utf8')
+    fs.writeFileSync(bdPath, JSON.stringify(contenidoActual, null, 2), "utf8");
 
     res.status(201).json({
       success: true,
       data: nuevoArticulo,
-      mensaje: 'Artículo guardado correctamente'
-    })
+      mensaje: "Artículo guardado correctamente"
+    });
   } catch (error) {
-    console.error('Error al guardar:', error)
+    console.error("Error al guardar:", error);
     res.status(500).json({
       success: false,
       data: null,
-      mensaje: 'Error al guardar el artículo'
-    })
+      mensaje: "Error al guardar el artículo"
+    });
   }
-})
+});
 
-router.post('/edit', (req, res) => {
-  const { id, title, type, icon } = req.body
+router.post("/edit", (req, res) => {
+  const { id, title, type, icon } = req.body;
 
   if (!id || !title || !type || !icon) {
     return res.status(400).json({
       success: false,
       data: null,
-      mensaje: 'Faltan campos obligatorios: id, title, type o icon'
-    })
+      mensaje: "Faltan campos obligatorios: id, title, type o icon"
+    });
   }
 
   try {
     const contenidoActual = fs.existsSync(bdPath)
-      ? JSON.parse(fs.readFileSync(bdPath, 'utf8'))
-      : []
+      ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
+      : [];
 
-    const index = contenidoActual.findIndex(a => a.id === id)
+    const index = contenidoActual.findIndex((a) => a.id === id);
 
     if (index === -1) {
       return res.status(404).json({
         success: false,
         data: null,
-        mensaje: 'Artículo no encontrado'
-      })
+        mensaje: "Artículo no encontrado"
+      });
     }
 
-    contenidoActual[index].title = title
-    contenidoActual[index].type = type
-    contenidoActual[index].slug = generarSlug(title)
-    contenidoActual[index].icon = icon
+    contenidoActual[index].title = title;
+    contenidoActual[index].type = type;
+    contenidoActual[index].slug = generarSlug(title);
+    contenidoActual[index].icon = icon;
 
-    fs.writeFileSync(bdPath, JSON.stringify(contenidoActual, null, 2), 'utf8')
+    fs.writeFileSync(bdPath, JSON.stringify(contenidoActual, null, 2), "utf8");
 
     res.json({
       success: true,
       data: contenidoActual[index],
-      mensaje: 'Artículo editado correctamente'
-    })
+      mensaje: "Artículo editado correctamente"
+    });
   } catch (error) {
-    console.error('Error al editar:', error)
+    console.error("Error al editar:", error);
     res.status(500).json({
       success: false,
       data: null,
-      mensaje: 'Error al editar el artículo'
-    })
+      mensaje: "Error al editar el artículo"
+    });
   }
-})
+});
 
-
-router.get('/getBySlug/:slug', (req, res) => {
-  const { slug } = req.params
+router.get("/getBySlug/:slug", (req, res) => {
+  const { slug } = req.params;
 
   try {
     const data = fs.existsSync(bdPath)
-      ? JSON.parse(fs.readFileSync(bdPath, 'utf8'))
-      : []
+      ? JSON.parse(fs.readFileSync(bdPath, "utf8"))
+      : [];
 
-    const articulo = data.find(a => a.slug === slug)
+    const articulo = data.find((a) => a.slug === slug);
 
     if (!articulo) {
       return res.status(404).json({
         success: false,
         data: null,
         mensaje: `No se encontró un artículo con el slug "${slug}"`
-      })
+      });
     }
+
+    // Clonar artículo excluyendo contenido de cada publicación
+    const articuloSinContenido = {
+      ...articulo,
+      publicacion: (articulo.publicacion || []).map((pub) => ({
+        id: pub.id,
+        titulo: pub.titulo,
+        descripcion: pub.descripcion,
+        slug: pub.slug,
+        tags: pub.tags,
+        fecha: pub.fecha,
+        author: pub.author,
+        authorSlug: pub.authorSlug,
+        authorImage: pub.authorImage
+      }))
+    };
 
     res.json({
       success: true,
-      data: articulo,
+      data: articuloSinContenido,
       mensaje: `Artículo con slug "${slug}" encontrado correctamente`
-    })
+    });
   } catch (error) {
-    console.error('Error al buscar por slug:', error)
+    console.error("Error al buscar por slug:", error);
     res.status(500).json({
       success: false,
       data: null,
-      mensaje: 'Error al buscar el artículo'
-    })
+      mensaje: "Error al buscar el artículo"
+    });
   }
-})
-
-module.exports = router
+});
+module.exports = router;

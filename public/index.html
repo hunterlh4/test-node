@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>API</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        padding: 40px;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 40px;
+      }
+      .route-box {
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 5px solid #4caf50;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 5px;
+      }
+      .method {
+        display: inline-block;
+        padding: 4px 10px;
+        font-size: 13px;
+        font-weight: bold;
+        color: white;
+        background-color: #4caf50;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      .url a {
+        display: inline-block;
+        color: #007acc;
+        font-family: monospace;
+        font-size: 14px;
+        padding: 6px 10px;
+        background-color: #f8f8f8;
+
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .url a:hover {
+        background-color: #e0f7ff;
+        border-color: #007acc;
+        color: #005a99;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .controller {
+        color: rgb(231, 60, 60);
+      }
+
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>API</h1>
+    <h2>👤 Categoria</h2>
+
+    <div class="route-box">
+      <div class="title">
+        Listar todas las categorías -> <span class="controller">getAll</span>
+      </div>
+      <div class="method GET">GET</div>
+      <div class="url">
+        <a href="/api/category/getAll" target="_blank">/api/category/getAll</a>
+      </div>
+    </div>
+
+    <div class="route-box">
+      <div class="title">
+        Crear nueva categoría -> <span class="controller">save</span>
+      </div>
+      <div class="method POST">POST</div>
+      <div class="url"><code>/api/categoria/save</code></div>
+    </div>
+
+    <div class="route-box">
+      <div class="title">
+        Editar categoría existente -> <span class="controller">edit</span>
+      </div>
+      <div class="method POST">POST</div>
+      <div class="url"><code>/api/categoria/edit</code></div>
+    </div>
+
+    <div class="route-box">
+      <div class="title">
+        Obtener categoría por slug -> <span class="controller">getBySlug</span>
+      </div>
+      <div class="method GET">GET</div>
+      <div class="url">
+        <a href="/api/category/getBySlug/react" target="_blank"
+          >/api/category/getBySlug/:slug</a
+        >
+      </div>
+    </div>
+
+    <h2>👤 Usuarios</h2>
+
+    <div class="route-box">
+      <div class="title">
+        Login de usuario -> <span class="controller">login</span>
+      </div>
+      <div class="method POST">POST</div>
+      <div class="url"><code>/api/usuarios/login</code></div>
+    </div>
+
+    <div class="route-box">
+      <div class="title">
+        Crear administrador por defecto ->
+        <span class="controller">createAdmin</span>
+      </div>
+      <div class="method GET">GET</div>
+      <div class="url">
+        <a href="/api/usuarios/createAdmin" target="_blank"
+          >/api/usuario/createAdmin</a
+        >
+      </div>
+    </div>
+
+    <div class="route-box">
+      <div class="title">
+        Crear usuario desde formulario -> <span class="controller">create</span>
+      </div>
+      <div class="method POST">POST</div>
+      <div class="url"><code>/api/usuarios/create</code></div>
+    </div>
+  </body>
+</html>
